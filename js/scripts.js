@@ -47,10 +47,6 @@ function createTable(data) {
   });
 }
 
-function validDigits(text) {
-  return text.replace(/[^0-9,]/g, "");
-}
-
 function calcImc(height, weight) {
   return (weight / (height * height)).toFixed(1);
 }
@@ -73,12 +69,24 @@ function showOrHideResults() {
 // Init
 createTable(data);
 
-// Eventos
-[heightInput, weightInput].forEach((el) => {
-  el.addEventListener("input", (e) => {
-    const updatedValue = validDigits(e.target.value);
-    e.target.value = updatedValue;
-  });
+// Formatação automática de altura (1,75)
+heightInput.addEventListener("input", (e) => {
+  let value = e.target.value.replace(/\D/g, ""); // remove não números
+  if (value.length > 1) {
+    value = value[0] + "," + value.substring(1, 3); // 1,75
+  }
+  e.target.value = value;
+});
+
+weightInput.addEventListener("input", (e) => {
+  let value = e.target.value.replace(/\D/g, ""); // remove não números
+
+  if (value.length > 2) {
+    // insere vírgula antes dos 2 últimos dígitos
+    value = value.substring(0, value.length - 1) + "," + value.substring(value.length - 1);
+  }
+
+  e.target.value = value;
 });
 
 calcBtn.addEventListener("click", (e) => {
